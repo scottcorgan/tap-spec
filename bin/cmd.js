@@ -30,7 +30,6 @@ tap.on('assert', function (res) {
 });
 
 tap.on('extra', function (extra) {
-  // out.push('\n' + chalk.bold('LOG: ') + extra + '\n');
   out.push('   ' + extra + '\n');
 });
 
