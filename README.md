@@ -19,6 +19,6 @@ tape test/index.js | node_modules/.bin/tspec
 **Testling**
 
 ```
-npm install testling -g--save-dev
+npm install testling -g
 testling test/index.js | node_modules/.bin/tspec
 ```
