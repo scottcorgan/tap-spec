@@ -5,18 +5,20 @@ Formatted TAP output like Mocha's spec reporter
 ## Install
  
 ```
-npm install tap-spec --save
+npm install tap-spec --save-dev
 ```
  
 ## Usage
  
-```js
-// Usage
+**Terminal**
+
 ```
- 
-## Run Tests
- 
+tape test/index.js | node_modules/.bin/tspec
+``` 
+
+**Testling**
+
 ```
-npm install
-npm test
+npm install testling -g--save-dev
+testling test/index.js | node_modules/.bin/tspec
 ```
