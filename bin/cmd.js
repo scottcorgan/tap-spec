@@ -16,6 +16,16 @@ out.push('\n');
 tap.on('comment', function (comment) {
   currentTestName = comment;
   
+  
+  if (/^tests [1-9]$/gi.test(comment)) comment = chalk.bold(comment);
+  else if (/^pass  [1-9]$/gi.test(comment)) comment = chalk.bold(comment);
+  else if (/^ok$/gi.test(comment)) return;
+  else out.push('\n')
+    
+  // if (!(/^tests [1-9]$/gi.test(comment))) console.log(true);//out.push('\n');
+  // else if (!(/^pass [1-9]$/gi.test(comment))) console.log(true);//out.push('\n');
+  
+  // out.push('\n');
   out.push('  ' + comment + '\n');
 });
 
@@ -26,7 +36,7 @@ tap.on('assert', function (res) {
   
   if (!res.ok) errors.push(currentTestName + ' ' + res.name);
   
-  out.push('    ' + output + ' ' + res.name + '\n');
+  out.push('    ' + output + ' ' + chalk.gray(res.name) + '\n');
 });
 
 tap.on('extra', function (extra) {
@@ -34,8 +44,6 @@ tap.on('extra', function (extra) {
 });
 
 tap.on('results', function (res) {
-  out.push('\n');
-  
   if (errors.length) {
     var past = (errors.length == 1) ? 'was' : 'were';
     var plural = (errors.length == 1) ? 'error' : 'errors';
