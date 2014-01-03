@@ -16,16 +16,12 @@ out.push('\n');
 tap.on('comment', function (comment) {
   currentTestName = comment;
   
-  
-  if (/^tests [1-9]$/gi.test(comment)) comment = chalk.bold(comment);
-  else if (/^pass  [1-9]$/gi.test(comment)) comment = chalk.bold(comment);
+  if (/^tests\s+[1-9]$/gi.test(comment)) comment = chalk.white(comment);
+  else if (/^pass\s+[1-9]$/gi.test(comment)) comment = chalk.green(comment);
+  else if (/^fail\s+[1-9]$/gi.test(comment)) comment = chalk.red(comment);
   else if (/^ok$/gi.test(comment)) return;
-  else out.push('\n')
-    
-  // if (!(/^tests [1-9]$/gi.test(comment))) console.log(true);//out.push('\n');
-  // else if (!(/^pass [1-9]$/gi.test(comment))) console.log(true);//out.push('\n');
+  else out.push('\n');
   
-  // out.push('\n');
   out.push('  ' + comment + '\n');
 });
 
@@ -46,9 +42,9 @@ tap.on('extra', function (extra) {
 tap.on('results', function (res) {
   if (errors.length) {
     var past = (errors.length == 1) ? 'was' : 'were';
-    var plural = (errors.length == 1) ? 'error' : 'errors';
+    var plural = (errors.length == 1) ? 'failure' : 'failures';
     
-    out.push('  ' + chalk.red('Fail: '));
+    out.push('  ' + chalk.red('Failed Tests: '));
     out.push('There ' + past + ' ' + chalk.red(errors.length) + ' ' + plural + '\n\n');
     
     errors.forEach(function (error) {
