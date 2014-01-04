@@ -16,9 +16,9 @@ out.push('\n');
 tap.on('comment', function (comment) {
   currentTestName = comment;
   
-  if (/^tests\s+[1-9]$/gi.test(comment)) comment = chalk.white(comment);
-  else if (/^pass\s+[1-9]$/gi.test(comment)) comment = chalk.green(comment);
-  else if (/^fail\s+[1-9]$/gi.test(comment)) comment = chalk.red(comment);
+  if (/^tests\s+[1-9]/gi.test(comment)) comment = chalk.white(comment);
+  else if (/^pass\s+[1-9]/gi.test(comment)) comment = chalk.green(comment);
+  else if (/^fail\s+[1-9]/gi.test(comment)) comment = chalk.red(comment);
   else if (/^ok$/gi.test(comment)) return;
   else out.push('\n');
   
