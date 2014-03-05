@@ -59,3 +59,9 @@ tap.on('results', function (res) {
 process.stdin
   .pipe(dup)
   .pipe(process.stdout);
+  
+process.on('exit', function () {
+  if (errors.length) {
+    process.exit(1);
+  }
+});
