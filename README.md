@@ -1,6 +1,8 @@
 # tap-spec
  
 Formatted TAP output like Mocha's spec reporter
+
+![Output screenshot](http://i.imgur.com/3yh5prr.png)
  
 ## Install
  
