@@ -18,7 +18,7 @@ npm install tap-spec --save-dev
 {
   "name": "module-name",
   "scripts": {
-    "test": "node ./test/tap-test.js | node_modules/.bin/tspec"
+    "test": "node ./test/tap-test.js | tspec"
   }
 }
 ```
