@@ -11,6 +11,19 @@ npm install tap-spec --save-dev
 ```
  
 ## Usage
+
+**packge.json**
+
+```json
+{
+  "name": "module-name",
+  "scripts": {
+    "test": "node ./test/tap-test.js | node_modules/.bin/tspec"
+  }
+}
+```
+
+Then run with `npm test`
  
 **Terminal**
 
