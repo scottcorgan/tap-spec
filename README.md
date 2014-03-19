@@ -18,7 +18,7 @@ npm install tap-spec --save-dev
 {
   "name": "module-name",
   "scripts": {
-    "test": "node ./test/tap-test.js | tspec"
+    "test": "node ./test/tap-test.js | tap-spec"
   }
 }
 ```
@@ -28,12 +28,12 @@ Then run with `npm test`
 **Terminal**
 
 ```
-tape test/index.js | node_modules/.bin/tspec
+tape test/index.js | node_modules/.bin/tap-spec
 ``` 
 
 **Testling**
 
 ```
 npm install testling -g
-testling test/index.js | node_modules/.bin/tspec
+testling test/index.js | node_modules/.bin/tap-spec
 ```
