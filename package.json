@@ -1,9 +1,9 @@
 {
   "name": "tap-spec",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Formatted TAP output like Mocha's spec reporter",
   "scripts": {
-    "test": "node test/index.js"
+    "test": "echo 'No'"
   },
   "repository": {
     "type": "git",
