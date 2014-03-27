@@ -10,6 +10,7 @@ var tap = parser();
 var dup = duplexer(tap, out);
 var currentTestName = '';
 var errors = [];
+var res;
 
 out.push('\n');
 
@@ -39,7 +40,8 @@ tap.on('extra', function (extra) {
   out.push('   ' + extra + '\n');
 });
 
-tap.on('results', function (res) {
+tap.on('results', function (_res) {
+  res = _res
   if (errors.length) {
     var past = (errors.length == 1) ? 'was' : 'were';
     var plural = (errors.length == 1) ? 'failure' : 'failures';
@@ -61,7 +63,7 @@ process.stdin
   .pipe(process.stdout);
   
 process.on('exit', function () {
-  if (errors.length) {
+  if (errors.length || !res.ok) {
     process.exit(1);
   }
 });
