@@ -53,6 +53,9 @@ tap.on('results', function (_res) {
       out.push('    ' + chalk.red('✗') + ' ' + chalk.red(error) + '\n');
     });
   }
+  else if (!res.ok) {
+    out.push('  ' + chalk.red('Fail!') + '\n');
+  }
   else{
     out.push('  ' + chalk.green('Pass!') + '\n');
   }
