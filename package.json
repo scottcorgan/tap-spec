@@ -1,6 +1,6 @@
 {
   "name": "tap-spec",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "Formatted TAP output like Mocha's spec reporter",
   "scripts": {
     "test": "echo 'No'"
@@ -23,8 +23,8 @@
   },
   "dependencies": {
     "chalk": "~0.4.0",
-    "through2": "~0.2.3",
-    "tap-parser": "~0.4.1",
+    "through2": "~0.4.1",
+    "tap-parser": "~0.5.0",
     "duplexer": "~0.1.1"
   },
   "bin": {
