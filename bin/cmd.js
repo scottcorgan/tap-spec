@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
 var tapSpec = require('../');
-var dup = tapSpec();
+var tapSpec = tapSpec();
 
 process.stdin
-  .pipe(dup)
+  .pipe(tapSpec)
   .pipe(process.stdout);
 
 process.on('exit', function () {
-  if (dup.errors.length || !dup.results.ok) {
+  if (tapSpec.errors.length || !tapSpec.results.ok) {
     process.exit(1);
   }
 });
