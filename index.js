@@ -71,6 +71,8 @@ module.exports = function() {
     else{
       out.push('  ' + chalk.green('Pass!') + '\n');
     }
+    
+    out.push('\n');
 
     // Expose errors and res on returned dup stream
     dup.errors = errors;
