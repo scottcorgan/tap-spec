@@ -1,6 +1,6 @@
 {
   "name": "tap-spec",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Formatted TAP output like Mocha's spec reporter",
   "main": "index.js",
   "scripts": {
@@ -23,10 +23,11 @@
     "url": "https://github.com/scottcorgan/tap-spec/issues"
   },
   "dependencies": {
-    "chalk": "~0.5.1",
-    "through2": "~0.6.1",
-    "tap-parser": "~0.7.0",
-    "duplexer": "~0.1.1"
+    "chalk": "^0.5.1",
+    "duplexer": "^0.1.1",
+    "pretty-ms": "^1.0.0",
+    "tap-parser": "^0.7.0",
+    "through2": "^0.6.3"
   },
   "bin": {
     "tspec": "bin/cmd.js",

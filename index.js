@@ -1,7 +1,8 @@
 var through = require('through2');
 var parser = require('tap-parser');
 var duplexer = require('duplexer');
-var chalk = require('chalk');
+var format = require('chalk');
+var prettyMs = require('pretty-ms');
 
 var symbols = {
     ok: '\u2713',
@@ -17,63 +18,117 @@ if (process && process.platform === 'win32') {
 }
 
 module.exports = function() {
+  
+  var startTime = new Date().getTime();
+  var endTime;
+  
   var out = through();
   var tap = parser();
   var dup = duplexer(tap, out);
+  var previousTestName = '';
   var currentTestName = '';
+  var testNumber = 0;
   var errors = [];
+  var runnerData = {};
   var res;
 
   out.push('\n');
-
+  
+  // Comments from tests
   tap.on('comment', function (comment) {
+    
+    previousTestName = currentTestName;
     currentTestName = comment;
+    
+    // Keep track of test number
+    if (currentTestName !== previousTestName) {
+      testNumber += 1;
+    }
 
-    if (/^tests\s+[1-9]/gi.test(comment)) comment = chalk.white(comment);
-    else if (/^pass\s+[1-9]/gi.test(comment)) comment = chalk.green(comment);
-    else if (/^fail\s+[1-9]/gi.test(comment)) comment = chalk.red(comment);
-    else if (/^ok$/gi.test(comment)) return;
-    else out.push('\n');
+    if (/^tests\s+[1-9]/gi.test(comment)) {
+      return;
+    }
+    
+    else if (/^pass\s+[1-9]/gi.test(comment)) {
+      return;
+    }
+    
+    else if (/^fail\s+[1-9]/gi.test(comment)) {
+      return;
+    }
+    
+    else if (/^ok$/gi.test(comment)) {
+      return;
+    }
+    
+    else {
+      // Test name
+      comment = testNumber + ') ' + comment + '\n';
+      out.push('\n');
+    }
 
     out.push('  ' + comment + '\n');
   });
-
+  
+  // Asserts
   tap.on('assert', function (res) {
+    
     var output = (res.ok)
-      ? chalk.green(symbols.ok)
-      : chalk.red(symbols.err);
+      ? format.green(symbols.ok)
+      : format.red(symbols.err);
 
     if (!res.ok) errors.push(currentTestName + ' ' + res.name);
 
-    out.push('    ' + output + ' ' + chalk.gray(res.name) + '\n');
+    out.push('    ' + output + ' ' + format.gray(res.name) + '\n');
   });
-
+  
+  // Generic outputs
   tap.on('extra', function (extra) {
-    out.push('   ' + extra + '\n');
+    
+    out.push('   ' + format.yellow(extra) + '\n');
   });
-
+  
+  // All done
   tap.on('results', function (_res) {
+    
     res = _res
+    
+    // Test number
+    out.push('  total:     ' + res.asserts.length + '\n');
+    // Pass number
+    out.push(format.green('  passing:   ' + res.pass.length + '\n'));
+    // Fail number
+    if (res.fail.length > 0) {
+      out.push(format.red('  failing:   ' + res.fail.length + '\n'));
+    }
+    // Duration
+    out.push('  duration:  ' + prettyMs(new Date().getTime() - startTime) + '\n');
+    
+    out.push('\n');
+    
     if (errors.length) {
       var past = (errors.length == 1) ? 'was' : 'were';
       var plural = (errors.length == 1) ? 'failure' : 'failures';
 
-      out.push('  ' + chalk.red('Failed Tests: '));
-      out.push('There ' + past + ' ' + chalk.red(errors.length) + ' ' + plural + '\n\n');
+      out.push('  ' + format.red('Failed Tests: '));
+      out.push('There ' + past + ' ' + format.red(errors.length) + ' ' + plural + '\n\n');
 
       errors.forEach(function (error) {
-        out.push('    ' + chalk.red(symbols.err) + ' ' + chalk.red(error) + '\n');
+        
+        out.push('    ' + format.red(symbols.err) + ' ' + format.red(error) + '\n');
       });
     }
+    
     else if (!res.ok) {
-      out.push('  ' + chalk.red('Fail!') + '\n');
+      out.push('  ' + format.red('Fail!') + '\n');
     }
+    
     else{
-      out.push('  ' + chalk.green('Pass!') + '\n');
+      out.push('  ' + format.green.bold('All tests pass!') + '\n');
     }
     
     out.push('\n');
-
+    
     // Expose errors and res on returned dup stream
     dup.errors = errors;
     dup.results = res;
