@@ -1,4 +1,5 @@
 # tap-spec
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/scottcorgan/tap-spec?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
  
 Formatted TAP output like Mocha's spec reporter
 
