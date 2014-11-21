@@ -119,7 +119,7 @@ module.exports = function() {
         
         var errors = groupedErrors[name];
         
-        out.push('    ' + format.dim(name) + '\n\n');
+        out.push('    ' + name + '\n\n');
         
         errors.forEach(function (error) {
           

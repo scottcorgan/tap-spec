@@ -2,7 +2,7 @@
  
 Formatted TAP output like Mocha's spec reporter
 
-![tap-spec preview](https://cloud.githubusercontent.com/assets/974723/5135637/91582926-70cf-11e4-8daf-1599ff89969b.png)
+![screen shot 2014-11-20 at 4 11 03 pm](https://cloud.githubusercontent.com/assets/974723/5135660/d83bb344-70cf-11e4-98c1-cca14d76d5a7.png)
  
 ## Install
  
