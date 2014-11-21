@@ -76,8 +76,14 @@ module.exports = function() {
     var output = (res.ok)
       ? format.green(symbols.ok)
       : format.red(symbols.err);
-
-    if (!res.ok) errors.push(currentTestName + ' ' + res.name);
+      
+    if (!res.ok) {
+      errors.push({
+        assertName: res.name,
+        testName: currentTestName,
+        testNumber: testNumber
+      });
+    }
 
     out.push('    ' + output + ' ' + format.gray(res.name) + '\n');
   });
@@ -93,6 +99,39 @@ module.exports = function() {
     
     res = _res
     
+    if (errors.length) {
+      var past = (errors.length == 1) ? 'was' : 'were';
+      var plural = (errors.length == 1) ? 'failure' : 'failures';
+
+      out.push('  ' + format.red.bold('Failed Tests: '));
+      out.push('There ' + past + ' ' + format.red.bold(errors.length) + ' ' + plural + '\n\n');
+      
+      // Group the errors by test name
+      var groupedErrors = {};
+      errors.forEach(function (error) {
+        
+        var name = error.testNumber + ') ' + error.testName;
+        groupedErrors[name] = groupedErrors[name] || [];
+        groupedErrors[name].push(error);
+      });
+      
+      Object.keys(groupedErrors).forEach(function (name) {
+        
+        var errors = groupedErrors[name];
+        
+        out.push('    ' + format.dim(name) + '\n\n');
+        
+        errors.forEach(function (error) {
+          
+          out.push('      ' + format.red(symbols.err) + ' ' + format.red(error.assertName) + '\n');
+        });
+        
+        out.push('\n');
+      });
+      
+      out.push('\n');
+    }
+    
     // Test number
     out.push('  total:     ' + res.asserts.length + '\n');
     // Pass number
@@ -106,28 +145,9 @@ module.exports = function() {
     
     out.push('\n');
     
-    if (errors.length) {
-      var past = (errors.length == 1) ? 'was' : 'were';
-      var plural = (errors.length == 1) ? 'failure' : 'failures';
-
-      out.push('  ' + format.red('Failed Tests: '));
-      out.push('There ' + past + ' ' + format.red(errors.length) + ' ' + plural + '\n\n');
-
-      errors.forEach(function (error) {
-        
-        out.push('    ' + format.red(symbols.err) + ' ' + format.red(error) + '\n');
-      });
-    }
-    
-    else if (!res.ok) {
-      out.push('  ' + format.red('Fail!') + '\n');
-    }
-    
-    else{
+    if (res.ok) {
       out.push('  ' + format.green.bold('All tests pass!') + '\n');
     }
-    
-    out.push('\n');
     
     // Expose errors and res on returned dup stream
     dup.errors = errors;
