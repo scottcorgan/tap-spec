@@ -63,7 +63,7 @@ module.exports = function() {
     
     else {
       // Test name
-      comment = testNumber + ') ' + comment + '\n';
+      comment = comment + '\n';
       out.push('\n');
     }
 
