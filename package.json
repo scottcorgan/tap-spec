@@ -4,7 +4,7 @@
   "description": "Formatted TAP output like Mocha's spec reporter",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'No'"
+    "test": "node ./test/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -32,5 +32,8 @@
   "bin": {
     "tspec": "bin/cmd.js",
     "tap-spec": "bin/cmd.js"
+  },
+  "devDependencies": {
+    "tapes": "^0.4.1"
   }
 }
