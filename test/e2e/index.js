@@ -22,7 +22,7 @@ test('e2e test', function(t) {
                    '  boop\n    ' + format.green(symbols.ok) + ' ' + format.gray('should be equal') + '\n' +
                            '    ' + format.green(symbols.ok) + ' ' + format.gray('(unnamed assert)') + '\n' +
                                     '  total:     ' + '4\n' +
-                                    format.green('  passing:   ' + 4 + '\n') +
+                                    format.green('  passing:   ' + 4) + '\n' +
                                 '  ' + format.green.bold('All tests pass!');
     testOutStream.pipe(tapSpec);
 
@@ -37,7 +37,12 @@ test('e2e test', function(t) {
 });
 
 function normalizeOutput(data) {
-    var noEmptyLine = _.filter(data.split('\n'), function(line) { return line.indexOf('\x1b') !== -1 || line.trim().length !== 0; });
+    var noEmptyLine = _.filter(data.split('\n'), function(line) { return line.trim().length !== 0; });
     noEmptyLine.splice(noEmptyLine.length - 2, 1);      // remove 'duration ...' line
     return noEmptyLine.join('\n');
 }
+
+String.prototype.repeat = function(n) {
+    return new Array(n + 1).join(this);
+}
+

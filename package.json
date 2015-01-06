@@ -34,6 +34,9 @@
     "tap-spec": "bin/cmd.js"
   },
   "devDependencies": {
+    "concat-stream": "^1.4.7",
+    "lodash": "^2.4.1",
+    "tape": "^3.0.3",
     "tapes": "^0.4.1"
   }
 }

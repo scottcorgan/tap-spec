@@ -135,10 +135,10 @@ module.exports = function() {
     // Test number
     out.push('  total:     ' + res.asserts.length + '\n');
     // Pass number
-    out.push(format.green('  passing:   ' + res.pass.length + '\n'));
+    out.push(format.green('  passing:   ' + res.pass.length) + '\n');
     // Fail number
     if (res.fail.length > 0) {
-      out.push(format.red('  failing:   ' + res.fail.length + '\n'));
+      out.push(format.red('  failing:   ' + res.fail.length) + '\n');
     }
     // Duration
     out.push('  duration:  ' + prettyMs(new Date().getTime() - startTime) + '\n');
