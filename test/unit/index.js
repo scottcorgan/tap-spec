@@ -28,7 +28,7 @@ test('unit test', function(t) {
             expected = '\n  This is a comment\n\n';
 
         rs.on('end', function() {
-            t.equal(actual, expected, 'should parse comment correctly.');
+            t.equal(actual, expected, 'Should parse comment correctly.');
         });
 
         rs.pipe(tapSpec);
@@ -42,7 +42,7 @@ test('unit test', function(t) {
             expected = '    ' + format.green(symbols.ok) + ' ' + format.grey('should be equal') + '\n';
 
         rs.on('end', function() {
-            t.equal(actual, expected, 'should parse assertion correctly.');
+            t.equal(actual, expected, 'Should parse assertion correctly.');
         });
 
         rs.pipe(tapSpec);

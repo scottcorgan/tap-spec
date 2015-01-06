@@ -67,13 +67,14 @@ test('e2e test', function(t) {
         });
 
         testOutStream.on('end', function() {
-            t.deepEqual(normalize(actual, 0), expected, 'Format fail-test output');
+            t.deepEqual(normalize(actual, 0), expected, 'Format fail-test output.');
         });
     });
 
     t.end();
 });
 
+// remove empty lines and 'duration ...' line
 // durationLinePos is the position of 'duration ...' line counting from the last line.
 function normalize(data, durationLinePos) {
     var noEmptyLine = _.filter(data.split('\n'), function(line) { return line.trim().length !== 0; });
