@@ -14,6 +14,7 @@ var ts = require('../..'),
 test('unit test', function(t) {
     t.beforeEach(function(t) {
         rs = require('stream').Readable();
+        rs._read = function noop() {};
         actual = '';
         tapSpec = ts();
         tapSpec.on('data', function(data) {
