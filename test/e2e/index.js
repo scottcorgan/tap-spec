@@ -11,19 +11,20 @@ var test = require('tapes'),
         ok: '\u2713',
         err: '\u2717'
     },
-    tapSpec = require('../../')();
+    tapSpec = null,
+    actual = null;
 
 
 test('e2e test', function(t) {
     t.beforeEach(function(t) {
-        // TODO
+        actual = '';
+        tapSpec = require('../../')();
         t.end();
     });
 
     t.test('all-test-pass output', function(t) {
         t.plan(1);
         var testOutStream = fs.createReadStream(passTestPath),
-            actual = '',
             expected = ' '.repeat(2) + 'beep\n' +
                 ' '.repeat(4) + format.green(symbols.ok) + ' ' + format.gray('should be equal') + '\n' +
                 ' '.repeat(4) + format.green(symbols.ok) + ' ' + format.gray('should be equivalent') + '\n' +
@@ -40,14 +41,13 @@ test('e2e test', function(t) {
         });
 
         testOutStream.on('end', function() {
-            t.deepEqual(normalizeOutput(actual), expected, 'Should output in the right format');
+            t.deepEqual(normalize(actual, 1), expected, 'Format ok-test output.');
         });
     });
 
     t.test('fail-test output', function(t) {
         t.plan(1);
         var testOutStream = fs.createReadStream(failTestPath),
-            actual = '',
             expected = ' '.repeat(2) + 'beep\n' +
                 ' '.repeat(4) + format.green(symbols.ok) + ' ' + format.gray('should be equal') + '\n' +
                 ' '.repeat(4) + format.red(symbols.err) + ' ' + format.gray('should be equivalent') + '\n' +
@@ -67,7 +67,7 @@ test('e2e test', function(t) {
         });
 
         testOutStream.on('end', function() {
-            t.deepEqual(normalizeOutput(actual, 0), expected, 'Should output in the right format');
+            t.deepEqual(normalize(actual, 0), expected, 'Format fail-test output');
         });
     });
 
@@ -75,7 +75,7 @@ test('e2e test', function(t) {
 });
 
 // durationLinePos is the position of 'duration ...' line counting from the last line.
-function normalizeOutput(data, durationLinePos) {
+function normalize(data, durationLinePos) {
     var noEmptyLine = _.filter(data.split('\n'), function(line) { return line.trim().length !== 0; });
     noEmptyLine.splice(noEmptyLine.length - durationLinePos - 1, 1);      // remove 'duration ...' line
     return noEmptyLine.join('\n');
