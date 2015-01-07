@@ -4,7 +4,9 @@
   "description": "Formatted TAP output like Mocha's spec reporter",
   "main": "index.js",
   "scripts": {
-    "test": "node ./test/unit/*.js && node ./test/e2e/*.js"
+    "test-unit": "node test/unit/index.js",
+    "test-e2e": "node test/e2e/index.js",
+    "test": "npm run test-unit && npm run test-e2e"
   },
   "repository": {
     "type": "git",
