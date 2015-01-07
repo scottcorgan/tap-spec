@@ -1,15 +1,13 @@
-'use strict';
-
-var ts = require('../..'),
-    test = require('tapes'),
-    format = require('chalk'),
-    symbols = {
-        ok: '\u2713',
-        err: '\u2717'
-    },
-    rs = null,
-    actual = null,
-    tapSpec = null;
+var ts = require('../..');
+var test = require('tapes');
+var format = require('chalk');
+var symbols = {
+    ok: '\u2713',
+    err: '\u2717'
+};
+var rs = null;
+var actual = null;
+var tapSpec = null;
 
 test('unit test', function(t) {
     t.beforeEach(function(t) {
@@ -25,8 +23,8 @@ test('unit test', function(t) {
 
     t.test('Parsing comment', function(t) {
         t.plan(1);
-        var comment = '# This is a comment\n',
-            expected = '\n  This is a comment\n\n';
+        var comment = '# This is a comment\n';
+        var expected = '\n  This is a comment\n\n';
 
         rs.on('end', function() {
             t.equal(actual, expected, 'Should parse comment correctly.');
@@ -39,8 +37,8 @@ test('unit test', function(t) {
 
     t.test('Parsing assert', function(t) {
         t.plan(1);
-        var assert = 'ok 1 should be equal\n',
-            expected = '    ' + format.green(symbols.ok) + ' ' + format.grey('should be equal') + '\n';
+        var assert = 'ok 1 should be equal\n';
+        var expected = '    ' + format.green(symbols.ok) + ' ' + format.grey('should be equal') + '\n';
 
         rs.on('end', function() {
             t.equal(actual, expected, 'Should parse assertion correctly.');

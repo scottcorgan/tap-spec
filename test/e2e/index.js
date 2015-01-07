@@ -1,18 +1,18 @@
 'use strict';
 
-var test = require('tapes'),
-    fs = require('fs'),
-    _ = require('lodash'),
-    path = require('path'),
-    passTestPath = path.resolve(__dirname, '..', 'fixtures', 'pass-test.txt'),
-    failTestPath = path.resolve(__dirname, '..', 'fixtures', 'fail-test.txt'),
-    format = require('chalk'),
-    symbols = {
-        ok: '\u2713',
-        err: '\u2717'
-    },
-    tapSpec = null,
-    actual = null;
+var test = require('tapes');
+var fs = require('fs');
+var _ = require('lodash');
+var path = require('path');
+var passTestPath = path.resolve(__dirname, '..', 'fixtures', 'pass-test.txt');
+var failTestPath = path.resolve(__dirname, '..', 'fixtures', 'fail-test.txt');
+var format = require('chalk');
+var symbols = {
+    ok: '\u2713',
+    err: '\u2717'
+};
+var tapSpec = null;
+var actual = null;
 
 
 test('e2e test', function(t) {
@@ -24,8 +24,8 @@ test('e2e test', function(t) {
 
     t.test('all-test-pass output', function(t) {
         t.plan(1);
-        var testOutStream = fs.createReadStream(passTestPath),
-            expected = ' '.repeat(2) + 'beep\n' +
+        var testOutStream = fs.createReadStream(passTestPath);
+        var expected = ' '.repeat(2) + 'beep\n' +
                 ' '.repeat(4) + format.green(symbols.ok) + ' ' + format.gray('should be equal') + '\n' +
                 ' '.repeat(4) + format.green(symbols.ok) + ' ' + format.gray('should be equivalent') + '\n' +
                 ' '.repeat(2) + 'boop\n' +
@@ -47,8 +47,8 @@ test('e2e test', function(t) {
 
     t.test('fail-test output', function(t) {
         t.plan(1);
-        var testOutStream = fs.createReadStream(failTestPath),
-            expected = ' '.repeat(2) + 'beep\n' +
+        var testOutStream = fs.createReadStream(failTestPath);
+        var expected = ' '.repeat(2) + 'beep\n' +
                 ' '.repeat(4) + format.green(symbols.ok) + ' ' + format.gray('should be equal') + '\n' +
                 ' '.repeat(4) + format.red(symbols.err) + ' ' + format.gray('should be equivalent') + '\n' +
                 ' '.repeat(2) + 'boop\n' +
@@ -78,7 +78,7 @@ test('e2e test', function(t) {
 // durationLinePos is the position of 'duration ...' line counting from the last line.
 function normalize(data, durationLinePos) {
     var noEmptyLine = _.filter(data.split('\n'), function(line) { return line.trim().length !== 0; });
-    noEmptyLine.splice(noEmptyLine.length - durationLinePos - 1, 1);      // remove 'duration ...' line
+    noEmptyLine.splice(noEmptyLine.length - durationLinePos - 1, 1);     
     return noEmptyLine.join('\n');
 }
 
