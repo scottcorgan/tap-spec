@@ -20,7 +20,6 @@ if (process && process.platform === 'win32') {
 module.exports = function() {
   
   var startTime = new Date().getTime();
-  var endTime;
   
   var out = through();
   var tap = parser();
@@ -29,7 +28,6 @@ module.exports = function() {
   var currentTestName = '';
   var testNumber = 0;
   var errors = [];
-  var runnerData = {};
   var res;
 
   out.push('\n');
