@@ -27,7 +27,7 @@ test('unit test', function(t) {
         var expected = '\n  This is a comment\n\n';
 
         rs.on('end', function() {
-            t.equal(actual, expected, 'Should parse comment correctly.');
+            t.equal(actual, expected, 'Should format comment correctly.');
         });
 
         rs.pipe(tapSpec);
@@ -35,18 +35,47 @@ test('unit test', function(t) {
         rs.push(null);
     });
 
-    t.test('Parsing assert', function(t) {
+    t.test('Assert ok', function(t) {
         t.plan(1);
-        var assert = 'ok 1 should be equal\n';
-        var expected = '    ' + format.green(symbols.ok) + ' ' + format.grey('should be equal') + '\n';
+        var assert = 'ok 1 this is an ok assertion\n';
+        var expected = '    ' + format.green(symbols.ok) + ' ' + format.gray('this is an ok assertion') + '\n';
 
         rs.on('end', function() {
-            t.equal(actual, expected, 'Should parse assertion correctly.');
+            t.equal(actual, expected, 'Should format ok assertion correctly.');
         });
 
         rs.pipe(tapSpec);
         rs.push(assert);
         rs.push(null);
     });
+
+    t.test('Assert not ok', function(t) {
+        t.plan(1);
+        var assert = 'not ok 1 this is a not-ok assertion\n';
+        var expected = '    ' + format.red(symbols.err) + ' ' + format.gray('this is a not-ok assertion') + '\n';
+
+        rs.on('end', function() {
+            t.equal(actual, expected, 'Should format not-ok assertion correctly.');
+        });
+
+        rs.pipe(tapSpec);
+        rs.push(assert);
+        rs.push(null);
+    });
+
+    t.test('Extra', function(t) {
+        t.plan(1);
+        var extra = 'something extra that does not match any other regex\n';
+        var expected = '   ' + format.yellow('something extra that does not match any other regex') + '\n';
+
+        rs.on('end', function() {
+            t.equal(actual, expected, 'Should format extra correctly.');
+        });
+
+        rs.pipe(tapSpec);
+        rs.push(extra);
+        rs.push(null);
+    });
+
     t.end();
 });
