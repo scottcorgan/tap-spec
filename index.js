@@ -20,7 +20,6 @@ if (process && process.platform === 'win32') {
 module.exports = function() {
   
   var startTime = new Date().getTime();
-  var endTime;
   
   var out = through();
   var tap = parser();
@@ -29,7 +28,6 @@ module.exports = function() {
   var currentTestName = '';
   var testNumber = 0;
   var errors = [];
-  var runnerData = {};
   var res;
 
   out.push('\n');
@@ -135,10 +133,10 @@ module.exports = function() {
     // Test number
     out.push('  total:     ' + res.asserts.length + '\n');
     // Pass number
-    out.push(format.green('  passing:   ' + res.pass.length + '\n'));
+    out.push(format.green('  passing:   ' + res.pass.length) + '\n');
     // Fail number
     if (res.fail.length > 0) {
-      out.push(format.red('  failing:   ' + res.fail.length + '\n'));
+      out.push(format.red('  failing:   ' + res.fail.length) + '\n');
     }
     // Duration
     out.push('  duration:  ' + prettyMs(new Date().getTime() - startTime) + '\n');
