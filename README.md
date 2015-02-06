@@ -26,7 +26,7 @@ test.createStream()
 
 ### CLI
 
-**packge.json**
+**package.json**
 
 ```json
 {
