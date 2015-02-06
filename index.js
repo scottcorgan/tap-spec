@@ -4,6 +4,7 @@ var duplexer = require('duplexer');
 var format = require('chalk');
 var prettyMs = require('pretty-ms');
 
+var assertCount = 0;
 var symbols = {
     ok: '\u2713',
     err: '\u2717'
@@ -74,7 +75,9 @@ module.exports = function() {
     var output = (res.ok)
       ? format.green(symbols.ok)
       : format.red(symbols.err);
-      
+    
+    assertCount += 1;
+    
     if (!res.ok) {
       errors.push({
         assertName: res.name,
@@ -96,6 +99,7 @@ module.exports = function() {
   tap.on('results', function (_res) {
     
     res = _res
+    
     
     if (errors.length) {
       var past = (errors.length == 1) ? 'was' : 'were';
@@ -145,6 +149,14 @@ module.exports = function() {
     
     if (res.ok) {
       out.push('  ' + format.green.bold('All tests pass!') + '\n');
+    }
+    
+    // Catching no assertions and formatting failing tests
+    if (!res.ok && assertCount === 0) {
+      out.push('  ' + format.red('Failed:') + ' No assertions found.\n\n');
+    }
+    else if (!res.ok && res.fail.length === 0) {
+      out.push('\n')
     }
     
     // Expose errors and res on returned dup stream
