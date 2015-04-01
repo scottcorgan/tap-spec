@@ -50,8 +50,9 @@ module.exports = function (spec) {
   // All done
   parser.on('output', function (results) {
     
+    output.push('\n\n');
+    
     if (results.fail.length > 0) {
-      output.push('\n\n');
       output.push(formatErrors(results));
       output.push('\n\n');
     }
