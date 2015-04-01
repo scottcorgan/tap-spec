@@ -50,9 +50,12 @@ module.exports = function (spec) {
   // All done
   parser.on('output', function (results) {
     
-    output.push('\n\n');
-    output.push(formatErrors(results));
-    output.push('\n\n');
+    if (results.fail.length > 0) {
+      output.push('\n\n');
+      output.push(formatErrors(results));
+      output.push('\n\n');
+    }
+    
     output.push(formatTotals(results));
     output.push('\n\n\n');
   });
@@ -69,6 +72,16 @@ module.exports = function (spec) {
     write += formatFailedAssertions(results);
     
     return write; 
+  }
+
+  function formatTotals (results) {
+    
+    return _.filter([
+      pad('total:     ' + results.asserts.length),
+      pad(format.green('passing:   ' + results.pass.length)),
+      results.fail.length > 0 ? pad(format.red('failing:   ' + results.fail.length)) : null,
+      pad('duration:  ' + prettyMs(new Date().getTime() - startTime)) // TODO: actually calculate this
+    ], _.identity).join('\n');
   }
   
   function formatFailedAssertions (results) {
@@ -93,16 +106,6 @@ module.exports = function (spec) {
     });
     
     return write;
-  }
-
-  function formatTotals (results) {
-    
-    return [
-      pad('total:     ' + results.asserts.length),
-      pad(format.green('passing:   ' + results.pass.length)),
-      pad(format.red('failing:   ' + results.fail.length)),
-      pad('duration:  ' + prettyMs(new Date().getTime() - startTime)) // TODO: actually calculate this
-    ].join('\n');
   }
   
   function pad (str) {
