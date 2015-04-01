@@ -81,8 +81,7 @@ module.exports = function() {
     if (!res.ok) {
       errors.push({
         assertName: res.name,
-        testName: currentTestName,
-        testNumber: testNumber
+        testName: currentTestName
       });
     }
 
@@ -112,7 +111,7 @@ module.exports = function() {
       var groupedErrors = {};
       errors.forEach(function (error) {
         
-        var name = error.testNumber + ') ' + error.testName;
+        var name = error.testName;
         groupedErrors[name] = groupedErrors[name] || [];
         groupedErrors[name].push(error);
       });
