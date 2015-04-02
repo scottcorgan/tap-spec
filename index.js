@@ -1,167 +1,155 @@
+var fs = require('fs');
+
+var tapOut = require('tap-out');
 var through = require('through2');
-var parser = require('tap-parser');
 var duplexer = require('duplexer');
 var format = require('chalk');
 var prettyMs = require('pretty-ms');
+var _ = require('lodash');
+var repeat = require('repeat-string');
 
-var assertCount = 0;
-var symbols = {
-    ok: '\u2713',
-    err: '\u2717'
-};
+var symbols = require('./lib/utils/symbols');
+var lTrimList = require('./lib/utils/l-trim-list');
 
-// win32 console default output fonts don't support tick/cross
-if (process && process.platform === 'win32') {
-  symbols = {
-    ok: '\u221A',
-    err: '\u00D7'
-  };
-}
-
-module.exports = function() {
+module.exports = function (spec) {
   
+  spec = spec || {};
+  
+  // TODO: document
+  var OUTPUT_PADDING = spec.padding || '  ';
+  
+  var output = through();
+  var parser = tapOut();
+  var stream = duplexer(parser, output);
   var startTime = new Date().getTime();
   
-  var out = through();
-  var tap = parser();
-  var dup = duplexer(tap, out);
-  var previousTestName = '';
-  var currentTestName = '';
-  var testNumber = 0;
-  var errors = [];
-  var res;
-
-  out.push('\n');
+  output.push('\n');
   
-  // Comments from tests
-  tap.on('comment', function (comment) {
+  parser.on('test', function (test) {
     
-    previousTestName = currentTestName;
-    currentTestName = comment;
-    
-    // Keep track of test number
-    if (currentTestName !== previousTestName) {
-      testNumber += 1;
-    }
-
-    if (/^tests\s+[1-9]/gi.test(comment)) {
-      return;
-    }
-    
-    else if (/^pass\s+[1-9]/gi.test(comment)) {
-      return;
-    }
-    
-    else if (/^fail\s+[1-9]/gi.test(comment)) {
-      return;
-    }
-    
-    else if (/^ok$/gi.test(comment)) {
-      return;
-    }
-    
-    else {
-      // Test name
-      comment = comment + '\n';
-      out.push('\n');
-    }
-
-    out.push('  ' + comment + '\n');
+    output.push('\n' + pad(test.name) + '\n\n');
   });
   
-  // Asserts
-  tap.on('assert', function (res) {
+  // Passing assertions
+  parser.on('pass', function (assertion) {
     
-    var output = (res.ok)
-      ? format.green(symbols.ok)
-      : format.red(symbols.err);
+    var glyph = format.green(symbols.ok);
+    var name = format.dim(assertion.name);
     
-    assertCount += 1;
-    
-    if (!res.ok) {
-      errors.push({
-        assertName: res.name,
-        testName: currentTestName
-      });
-    }
-
-    out.push('    ' + output + ' ' + format.gray(res.name) + '\n');
+    output.push(pad('  ' + glyph + ' ' + name + '\n'));
   });
   
-  // Generic outputs
-  tap.on('extra', function (extra) {
+  // Failing assertions
+  parser.on('fail', function (assertion) {
     
-    out.push('   ' + format.yellow(extra) + '\n');
+    var glyph = format.red(symbols.err);
+    var name = format.red.bold(assertion.name);
+    
+    output.push(pad('  ' + glyph + ' ' + name + '\n'));
+    
+    stream.failed = true;
   });
+  
   
   // All done
-  tap.on('results', function (_res) {
+  parser.on('output', function (results) {
     
-    res = _res
+    output.push('\n\n');
     
-    
-    if (errors.length) {
-      var past = (errors.length == 1) ? 'was' : 'were';
-      var plural = (errors.length == 1) ? 'failure' : 'failures';
-
-      out.push('  ' + format.red.bold('Failed Tests: '));
-      out.push('There ' + past + ' ' + format.red.bold(errors.length) + ' ' + plural + '\n\n');
-      
-      // Group the errors by test name
-      var groupedErrors = {};
-      errors.forEach(function (error) {
-        
-        var name = error.testName;
-        groupedErrors[name] = groupedErrors[name] || [];
-        groupedErrors[name].push(error);
-      });
-      
-      Object.keys(groupedErrors).forEach(function (name) {
-        
-        var errors = groupedErrors[name];
-        
-        out.push('    ' + name + '\n\n');
-        
-        errors.forEach(function (error) {
-          
-          out.push('      ' + format.red(symbols.err) + ' ' + format.red(error.assertName) + '\n');
-        });
-        
-        out.push('\n');
-      });
-      
-      out.push('\n');
+    if (results.fail.length > 0) {
+      output.push(formatErrors(results));
+      output.push('\n');
     }
     
-    // Test number
-    out.push('  total:     ' + res.asserts.length + '\n');
-    // Pass number
-    out.push(format.green('  passing:   ' + res.pass.length) + '\n');
-    // Fail number
-    if (res.fail.length > 0) {
-      out.push(format.red('  failing:   ' + res.fail.length) + '\n');
-    }
-    // Duration
-    out.push('  duration:  ' + prettyMs(new Date().getTime() - startTime) + '\n');
-    
-    out.push('\n');
-    
-    if (res.ok) {
-      out.push('  ' + format.green.bold('All tests pass!') + '\n');
-    }
-    
-    // Catching no assertions and formatting failing tests
-    if (!res.ok && assertCount === 0) {
-      out.push('  ' + format.red('Failed:') + ' No assertions found.\n\n');
-    }
-    else if (!res.ok && res.fail.length === 0) {
-      out.push('\n')
-    }
-    
-    // Expose errors and res on returned dup stream
-    dup.errors = errors;
-    dup.results = res;
+    output.push(formatTotals(results));
+    output.push('\n\n\n');
   });
+  
+  // Utils
+  
+  function formatErrors (results) {
+    
+    var failCount = results.fail.length;
+    var past = (failCount === 1) ? 'was' : 'were';
+    var plural = (failCount === 1) ? 'failure' : 'failures';
+    
+    var out = '\n' + pad(format.red.bold('Failed Tests:') + ' There ' + past + ' ' + format.red.bold(failCount) + ' ' + plural + '\n');
+    out += formatFailedAssertions(results);
+    
+    return out; 
+  }
 
-  return dup;
-}
+  function formatTotals (results) {
+    
+    return _.filter([
+      pad('total:     ' + results.asserts.length),
+      pad(format.green('passing:   ' + results.pass.length)),
+      results.fail.length > 0 ? pad(format.red('failing:   ' + results.fail.length)) : null,
+      pad('duration:  ' + prettyMs(new Date().getTime() - startTime)) // TODO: actually calculate this
+    ], _.identity).join('\n');
+  }
+  
+  function formatFailedAssertions (results) {
+    
+    var out = '';
+    
+    var groupedAssertions = _.groupBy(results.fail, function (assertion) {
+      return assertion.test;
+    });
+    
+    _.each(groupedAssertions, function (assertions, testNumber) {
+      
+      // Wrie failed assertion's test name
+      var test = _.find(results.tests, {number: parseInt(testNumber)});
+      out += '\n' + pad('  ' + test.name + '\n\n');
+      
+      // Write failed assertion
+      _.each(assertions, function (assertion) {
+        
+        out += pad('    ' + format.red(symbols.err) + ' ' + format.red(assertion.name)) + '\n';
+        out += formatFailedAssertionDetail(assertion) + '\n';
+      });
+    });
+    
+    return out;
+  }
+  
+  function formatFailedAssertionDetail (assertion) {
+    
+    var out = '';
+    
+    var filepath = assertion.error.at.file;
+    var contents = fs.readFileSync(filepath).toString().split('\n');
+    var line = contents[assertion.error.at.line - 1];
+    var previousLine = contents[assertion.error.at.line - 2];
+    var nextLine = contents[assertion.error.at.line];
+    var lineNumber = parseInt(assertion.error.at.line);
+    var previousLineNumber = parseInt(assertion.error.at.line) - 1;
+    var nextLineNumber = parseInt(assertion.error.at.line) + 1;
+    
+    var lines = lTrimList([
+      line,
+      previousLine,
+      nextLine
+    ]);
+    
+    var atCharacterPadding = parseInt(assertion.error.at.character) + parseInt(lineNumber.toString().length) + 2;
+    
+    out += pad('    ' + format.dim(filepath)) + '\n';
+
+    out += pad('      ' + repeat(' ', atCharacterPadding) + format.red('v') + "\n");
+    out += pad('      ' + format.dim(previousLineNumber + '.  ' + lines[1])) + '\n';
+    out += pad('      ' + lineNumber + '.  ' + lines[0]) + '\n';
+    out += pad('      ' + format.dim(nextLineNumber + '.  ' + lines[2])) + '\n';
+    out += pad('      ' + repeat(' ', atCharacterPadding) + format.red('^') + "\n");
+    
+    return out;
+  }
+  
+  function pad (str) {
+    
+    return OUTPUT_PADDING + str;
+  }
+  
+  return stream;
+};
