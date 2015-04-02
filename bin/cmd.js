@@ -7,12 +7,6 @@ process.stdin
   .pipe(tapSpec)
   .pipe(process.stdout);
 
-// process.on('uncaughtException', function (err) {
-  
-//   console.log(err.message);
-//   console.log(err.stack);
-// });
-
 process.on('exit', function (status) {
   
   if (status === 1) {

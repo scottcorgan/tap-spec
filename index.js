@@ -1,11 +1,15 @@
+var fs = require('fs');
+
 var tapOut = require('tap-out');
 var through = require('through2');
 var duplexer = require('duplexer');
 var format = require('chalk');
 var prettyMs = require('pretty-ms');
 var _ = require('lodash');
+var repeat = require('repeat-string');
 
 var symbols = require('./lib/utils/symbols');
+var lTrimList = require('./lib/utils/l-trim-list');
 
 module.exports = function (spec) {
   
@@ -23,14 +27,14 @@ module.exports = function (spec) {
   
   parser.on('test', function (test) {
     
-    output.push('\n' + pad(format.white(test.name) + '\n\n'));
+    output.push('\n' + pad(test.name) + '\n\n');
   });
   
   // Passing assertions
   parser.on('pass', function (assertion) {
     
     var glyph = format.green(symbols.ok);
-    var name = format.gray(assertion.name);
+    var name = format.dim(assertion.name);
     
     output.push(pad('  ' + glyph + ' ' + name + '\n'));
   });
@@ -54,7 +58,7 @@ module.exports = function (spec) {
     
     if (results.fail.length > 0) {
       output.push(formatErrors(results));
-      output.push('\n\n');
+      output.push('\n');
     }
     
     output.push(formatTotals(results));
@@ -69,10 +73,10 @@ module.exports = function (spec) {
     var past = (failCount === 1) ? 'was' : 'were';
     var plural = (failCount === 1) ? 'failure' : 'failures';
     
-    var write = pad(format.red.bold('Failed Tests:') + ' There ' + past + ' ' + format.red.bold(failCount) + ' ' + plural + '\n');
-    write += formatFailedAssertions(results);
+    var out = '\n' + pad(format.red.bold('Failed Tests:') + ' There ' + past + ' ' + format.red.bold(failCount) + ' ' + plural + '\n');
+    out += formatFailedAssertions(results);
     
-    return write; 
+    return out; 
   }
 
   function formatTotals (results) {
@@ -87,7 +91,7 @@ module.exports = function (spec) {
   
   function formatFailedAssertions (results) {
     
-    var write = '';
+    var out = '';
     
     var groupedAssertions = _.groupBy(results.fail, function (assertion) {
       return assertion.test;
@@ -95,18 +99,51 @@ module.exports = function (spec) {
     
     _.each(groupedAssertions, function (assertions, testNumber) {
       
-      // Write failed assertion's test name
+      // Wrie failed assertion's test name
       var test = _.find(results.tests, {number: parseInt(testNumber)});
-      write += '\n' + pad('  ' + test.name + '\n\n');
+      out += '\n' + pad('  ' + test.name + '\n\n');
       
       // Write failed assertion
       _.each(assertions, function (assertion) {
         
-        write += pad('    ' + format.red(symbols.err) + ' ' + format.red(assertion.name) + '\n');
+        out += pad('    ' + format.red(symbols.err) + ' ' + format.red(assertion.name)) + '\n';
+        out += formatFailedAssertionDetail(assertion) + '\n';
       });
     });
     
-    return write;
+    return out;
+  }
+  
+  function formatFailedAssertionDetail (assertion) {
+    
+    var out = '';
+    
+    var filepath = assertion.error.at.file;
+    var contents = fs.readFileSync(filepath).toString().split('\n');
+    var line = contents[assertion.error.at.line - 1];
+    var previousLine = contents[assertion.error.at.line - 2];
+    var nextLine = contents[assertion.error.at.line];
+    var lineNumber = parseInt(assertion.error.at.line);
+    var previousLineNumber = parseInt(assertion.error.at.line) - 1;
+    var nextLineNumber = parseInt(assertion.error.at.line) + 1;
+    
+    var lines = lTrimList([
+      line,
+      previousLine,
+      nextLine
+    ]);
+    
+    var atCharacterPadding = parseInt(assertion.error.at.character) + parseInt(lineNumber.toString().length) + 2;
+    
+    out += pad('    ' + format.dim(filepath)) + '\n';
+
+    out += pad('      ' + repeat(' ', atCharacterPadding) + format.red('v') + "\n");
+    out += pad('      ' + format.dim(previousLineNumber + '.  ' + lines[1])) + '\n';
+    out += pad('      ' + lineNumber + '.  ' + lines[0]) + '\n';
+    out += pad('      ' + format.dim(nextLineNumber + '.  ' + lines[2])) + '\n';
+    out += pad('      ' + repeat(' ', atCharacterPadding) + format.red('^') + "\n");
+    
+    return out;
   }
   
   function pad (str) {
