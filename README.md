@@ -1,4 +1,4 @@
-# tap-spec ![NPM version](https://img.shields.io/npm/v/tap-spec.svg?style=flat-square) ![NPM download count](https://img.shields.io/npm/dm/tap-spec.svg?style=flat-square)
+# tap-spec [![NPM version](https://img.shields.io/npm/v/tap-spec.svg?style=flat-square)](https://www.npmjs.com/package/tap-spec) [![NPM download count](https://img.shields.io/npm/dm/tap-spec.svg?style=flat-square)](https://www.npmjs.com/package/tap-spec)
 
 Formatted TAP output like Mocha's spec reporter
 
