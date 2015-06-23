@@ -57,6 +57,11 @@ module.exports = function (spec) {
     stream.failed = true;
   });
 
+  parser.on('comment', function (comment) {
+
+    output.push(pad('  ' + format.yellow(comment.raw)) + '\n');
+  });
+
   // All done
   parser.on('output', function (results) {
 
