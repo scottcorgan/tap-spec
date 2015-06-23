@@ -73,16 +73,12 @@ module.exports = function (spec) {
 
   // Utils
 
-  function prettifyRawError (spec) {
-    var output = '';
+  function prettifyRawError (rawError) {
 
-    _.each(spec, function (value, key) {
+    return rawError.split('\n').map(function (line) {
 
-      output += pad('    ' + key + ': ');
-      output += value + '\n';
-    });
-
-    return output + '\n\n';
+      return pad(line);
+    }).join('\n') + '\n\n';
   }
 
   function formatErrors (results) {
