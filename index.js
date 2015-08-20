@@ -7,15 +7,14 @@ var format = require('chalk');
 var prettyMs = require('pretty-ms');
 var _ = require('lodash');
 var repeat = require('repeat-string');
+var symbols = require('figures');
 
-var symbols = require('./lib/utils/symbols');
 var lTrimList = require('./lib/utils/l-trim-list');
 
 module.exports = function (spec) {
 
   spec = spec || {};
 
-  // TODO: document
   var OUTPUT_PADDING = spec.padding || '  ';
 
   var output = through();
@@ -27,13 +26,13 @@ module.exports = function (spec) {
 
   parser.on('test', function (test) {
 
-    output.push('\n' + pad(test.name) + '\n\n');
+    output.push('\n' + pad(format.underline(test.name)) + '\n\n');
   });
 
   // Passing assertions
   parser.on('pass', function (assertion) {
 
-    var glyph = format.green(symbols.ok);
+    var glyph = format.green(symbols.tick);
     var name = format.dim(assertion.name);
 
     output.push(pad('  ' + glyph + ' ' + name + '\n'));
@@ -42,7 +41,7 @@ module.exports = function (spec) {
   // Failing assertions
   parser.on('fail', function (assertion) {
 
-    var glyph = symbols.err;
+    var glyph = symbols.cross;
     var title =  glyph + ' ' + assertion.name;
     var raw = format.cyan(prettifyRawError(assertion.error.raw));
     var divider = _.fill(
@@ -108,14 +107,14 @@ module.exports = function (spec) {
   function formatTotals (results) {
 
     if (results.tests.length === 0) {
-      return pad(format.red('No tests found'));
+      return pad(format.red(symbols.cross + ' No tests found'));
     }
 
     return _.filter([
       pad('total:     ' + results.asserts.length),
       pad(format.green('passing:   ' + results.pass.length)),
       results.fail.length > 0 ? pad(format.red('failing:   ' + results.fail.length)) : undefined,
-      pad('duration:  ' + prettyMs(new Date().getTime() - startTime)) // TODO: actually calculate this
+      pad('duration:  ' + prettyMs(new Date().getTime() - startTime))
     ], _.identity).join('\n');
   }
 
@@ -136,7 +135,7 @@ module.exports = function (spec) {
       // Write failed assertion
       _.each(assertions, function (assertion) {
 
-        out += pad('    ' + format.red(symbols.err) + ' ' + format.red(assertion.name)) + '\n';
+        out += pad('    ' + format.red(symbols.cross) + ' ' + format.red(assertion.name)) + '\n';
       });
 
       out += '\n';
