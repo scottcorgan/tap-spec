@@ -74,6 +74,13 @@ module.exports = function (spec) {
 
     output.push(formatTotals(results));
     output.push('\n\n\n');
+
+    // Exit if no tests run. This is a result of 1 of 2 things:
+    //  1. No tests were written
+    //  2. There was some error before the TAP got to the parser
+    if (results.tests.length === 0) {
+      process.exit(1);
+    }
   });
 
   // Utils
@@ -100,10 +107,14 @@ module.exports = function (spec) {
 
   function formatTotals (results) {
 
+    if (results.tests.length === 0) {
+      return pad(format.red('No tests found'));
+    }
+
     return _.filter([
       pad('total:     ' + results.asserts.length),
       pad(format.green('passing:   ' + results.pass.length)),
-      results.fail.length > 0 ? pad(format.red('failing:   ' + results.fail.length)) : null,
+      results.fail.length > 0 ? pad(format.red('failing:   ' + results.fail.length)) : undefined,
       pad('duration:  ' + prettyMs(new Date().getTime() - startTime)) // TODO: actually calculate this
     ], _.identity).join('\n');
   }
