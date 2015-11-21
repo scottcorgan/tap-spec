@@ -66,6 +66,11 @@ module.exports = function (spec) {
 
     output.push('\n\n');
 
+    // Most likely a failure upstream
+    if (results.plans.length < 1) {
+      process.exit(1);
+    }
+
     if (results.fail.length > 0) {
       output.push(formatErrors(results));
       output.push('\n');
