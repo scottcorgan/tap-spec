@@ -26,7 +26,7 @@ module.exports = function (spec) {
 
   parser.on('test', function (test) {
 
-    output.push('\n' + pad(format.underline(test.name)) + '\n\n');
+    output.push('\n' + pad(format.underline(test.name)) + '\n');
   });
 
   // Passing assertions
