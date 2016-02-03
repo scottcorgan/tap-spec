@@ -30,7 +30,8 @@
     "pretty-ms": "^2.1.0",
     "repeat-string": "^1.5.2",
     "tap-out": "^1.4.1",
-    "through2": "^2.0.0"
+    "through2": "^2.0.0",
+    "yargs": "^3.32.0"
   },
   "bin": {
     "tspec": "bin/cmd.js",

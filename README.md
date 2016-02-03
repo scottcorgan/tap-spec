@@ -50,3 +50,24 @@ tape test/index.js | node_modules/.bin/tap-spec
 npm install testling -g
 testling test/index.js | node_modules/.bin/tap-spec
 ```
+
+## Options
+
+### Discard success message:
+
+This option is especially useful when fix failing tests in large tests suite.
+
+```bash
+tape test/index.js | node_modules/.bin/tap-spec --nosuccess
+```
+
+```js
+var test = require('tape');
+var tapSpec = require('tap-spec');
+
+test.createStream()
+  .pipe(tapSpec({
+    noSuccess: true
+  }))
+  .pipe(process.stdout);
+```
