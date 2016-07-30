@@ -16,6 +16,7 @@ module.exports = function (spec) {
   spec = spec || {};
 
   var OUTPUT_PADDING = spec.padding || '  ';
+  var noSuccess = spec.noSuccess;
 
   var output = through();
   var parser = tapOut();
@@ -31,6 +32,8 @@ module.exports = function (spec) {
 
   // Passing assertions
   parser.on('pass', function (assertion) {
+
+    if (noSuccess) return;
 
     var glyph = format.green(symbols.tick);
     var name = format.dim(assertion.name);
