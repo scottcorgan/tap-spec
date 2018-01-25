@@ -32,10 +32,19 @@ module.exports = function (spec) {
   // Passing assertions
   parser.on('pass', function (assertion) {
 
-    var glyph = format.green(symbols.tick);
-    var name = format.dim(assertion.name);
+    if (/# SKIP/.test(assertion.name)) {
+      var name = assertion.name.replace(' # SKIP', '')
+      name = format.cyan('- ' + name);
 
-    output.push(pad('  ' + glyph + ' ' + name + '\n'));
+      output.push(pad('  ' + name + '\n'));
+    }
+    else {
+      var glyph = format.green(symbols.tick);
+      var name = format.dim(assertion.name);
+
+      output.push(pad('  ' + glyph + ' ' + name + '\n'));
+    }
+
   });
 
   // Failing assertions
