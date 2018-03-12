@@ -58,10 +58,14 @@ module.exports = function (spec) {
       '-'
     ).join('');
 
-    output.push('\n' + pad('  ' + format.red(title) + '\n'));
-    output.push(pad('  ' + format.red(divider) + '\n'));
+    if (!spec.hideError) {
+      output.push('\n')
+    }
+
+    output.push(pad('  ' + format.red(title) + '\n'));
 
     if (!spec.hideError) {
+      output.push(pad('  ' + format.red(divider) + '\n'));
       output.push(raw);
     }
 
