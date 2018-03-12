@@ -60,7 +60,10 @@ module.exports = function (spec) {
 
     output.push('\n' + pad('  ' + format.red(title) + '\n'));
     output.push(pad('  ' + format.red(divider) + '\n'));
-    output.push(raw);
+
+    if (!spec.hideError) {
+      output.push(raw);
+    }
 
     stream.failed = true;
   });

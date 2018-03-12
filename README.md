@@ -19,7 +19,9 @@ var test = require('tape');
 var tapSpec = require('tap-spec');
 
 test.createStream()
-  .pipe(tapSpec())
+  .pipe(tapSpec({
+    hideError: false // optional
+  }))
   .pipe(process.stdout);
 ```
 
