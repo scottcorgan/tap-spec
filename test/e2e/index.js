@@ -2,7 +2,6 @@
 
 var test = require('tapes');
 var fs = require('fs');
-var _ = require('lodash');
 var path = require('path');
 var okTestPath = path.resolve(__dirname, '..', 'fixtures', 'ok.txt');
 var notOkTestPath = path.resolve(__dirname, '..', 'fixtures', 'not-ok.txt');
@@ -82,7 +81,7 @@ test('e2e test', function(t) {
 // remove empty lines and 'duration ...' line
 // durationLinePos is the position of 'duration ...' line counting from the last line.
 function normalize(data, durationLinePos) {
-    var noEmptyLine = _.filter(data.split('\n'), function(line) { return line.trim().length !== 0; });
+    var noEmptyLine = data.split('\n').filter(function(line) { return line.trim().length !== 0; });
     noEmptyLine.splice(noEmptyLine.length - durationLinePos - 1, 1);
     return noEmptyLine.join('\n');
 }
