@@ -121,14 +121,14 @@ module.exports = function (spec) {
     if (results.tests.length === 0) {
       return pad(format.red(symbols.cross + ' No tests found'));
     }
- 
+
     const temp = [
       pad('total:     ' + results.asserts.length),
       pad(format.green('passing:   ' + results.pass.length)),
       results.fail.length > 0 ? pad(format.red('failing:   ' + results.fail.length)) : undefined,
       pad('duration:  ' + prettyMs(new Date().getTime() - startTime))
     ];
-    return temp.join('\n');
+    return temp.filter( value => typeof value !== 'undefined' ).join('\n');
   }
 
   function formatFailedAssertions (results) {
