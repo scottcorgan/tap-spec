@@ -5,7 +5,6 @@ var through = require('through2');
 var duplexer = require('duplexer');
 var format = require('chalk');
 var prettyMs = require('pretty-ms');
-var _ = require('lodash');
 var repeat = require('repeat-string');
 var symbols = require('figures');
 
@@ -53,8 +52,7 @@ module.exports = function (spec) {
     var glyph = symbols.cross;
     var title =  glyph + ' ' + assertion.name;
     var raw = format.cyan(prettifyRawError(assertion.error.raw));
-    var divider = _.fill(
-      new Array((title).length + 1),
+    var divider = new Array(title.length + 1).fill(
       '-'
     ).join('');
 
@@ -125,31 +123,32 @@ module.exports = function (spec) {
         results.asserts.length === 0) {
       return pad(format.red(symbols.cross + ' No tests found'));
     }
-
-    return _.filter([
+ 
+    const temp = [
       pad('total:     ' + results.asserts.length),
       pad(format.green('passing:   ' + results.pass.length)),
       results.fail.length > 0 ? pad(format.red('failing:   ' + results.fail.length)) : undefined,
       pad('duration:  ' + prettyMs(new Date().getTime() - startTime))
-    ], _.identity).join('\n');
+    ];
+    return temp.join('\n');
   }
 
   function formatFailedAssertions (results) {
 
     var out = '';
 
-    var groupedAssertions = _.groupBy(results.fail, function (assertion) {
+    var groupedAssertions = results.fail.filter(function (assertion) {
       return assertion.test;
     });
 
-    _.each(groupedAssertions, function (assertions, testNumber) {
+    groupedAssertions.forEach(function (assertions, testNumber) {
 
       // Wrie failed assertion's test name
-      var test = _.find(results.tests, {number: parseInt(testNumber)});
+      var test = results.tests.find(results.tests, {number: parseInt(testNumber)});
       out += '\n' + pad('  ' + test.name + '\n\n');
 
       // Write failed assertion
-      _.each(assertions, function (assertion) {
+      assertions.forEach(function (assertion) {
 
         out += pad('    ' + format.red(symbols.cross) + ' ' + format.red(assertion.name)) + '\n';
       });

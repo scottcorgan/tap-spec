@@ -26,7 +26,6 @@
     "chalk": "^1.0.0",
     "duplexer": "^0.1.1",
     "figures": "^1.4.0",
-    "lodash": "^3.6.0",
     "pretty-ms": "^2.1.0",
     "repeat-string": "^1.5.2",
     "tap-out": "^1.4.1",
