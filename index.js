@@ -89,9 +89,10 @@ module.exports = function (spec) {
     output.push('\n\n\n');
 
     // Exit if no tests run. This is a result of 1 of 2 things:
-    //  1. No tests were written
+    //  1. No tests and asserts were written
     //  2. There was some error before the TAP got to the parser
-    if (results.tests.length === 0) {
+    if (results.tests.length === 0 &&
+        results.asserts.length === 0) {
       process.exit(1);
     }
   });
@@ -120,7 +121,8 @@ module.exports = function (spec) {
 
   function formatTotals (results) {
 
-    if (results.tests.length === 0) {
+    if (results.tests.length === 0 &&
+        results.asserts.length === 0) {
       return pad(format.red(symbols.cross + ' No tests found'));
     }
 
