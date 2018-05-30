@@ -23,20 +23,19 @@
     "url": "https://github.com/scottcorgan/tap-spec/issues"
   },
   "dependencies": {
-    "chalk": "^1.0.0",
+    "chalk": "^2.4.1",
     "duplexer": "^0.1.1",
-    "figures": "^1.4.0",
-    "lodash": "^3.6.0",
-    "pretty-ms": "^2.1.0",
-    "repeat-string": "^1.5.2",
-    "tap-out": "^1.4.1",
-    "through2": "^2.0.0"
+    "figures": "^2.0.0",
+    "pretty-ms": "^3.1.0",
+    "repeat-string": "^1.6.1",
+    "tap-out": "^2.0.0",
+    "through2": "^2.0.3"
   },
   "bin": {
     "tspec": "bin/cmd.js",
     "tap-spec": "bin/cmd.js"
   },
   "devDependencies": {
-    "tapes": "^2.0.0"
+    "tapes": "^4.1.0"
   }
 }
