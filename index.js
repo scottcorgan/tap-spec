@@ -142,7 +142,7 @@ module.exports = function (spec) {
     groupedAssertions.forEach(function (assertions, testNumber) {
 
       // Wrie failed assertion's test name
-      var test = results.tests.find(results.tests, {number: parseInt(testNumber)});
+      var test = results.tests.find(function(v){ return v.number == parseInt(testNumber); });
       out += '\n' + pad('  ' + test.name + '\n\n');
 
       // Write failed assertion
