@@ -29,7 +29,7 @@
     "lodash": "^4.17.10",
     "pretty-ms": "^2.1.0",
     "repeat-string": "^1.5.2",
-    "tap-out": "^1.4.1",
+    "tap-out": "^2.1.0",
     "through2": "^2.0.0"
   },
   "bin": {
