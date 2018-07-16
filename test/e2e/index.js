@@ -6,7 +6,7 @@ var _ = require('lodash');
 var path = require('path');
 var okTestPath = path.resolve(__dirname, '..', 'fixtures', 'ok.txt');
 var notOkTestPath = path.resolve(__dirname, '..', 'fixtures', 'not-ok.txt');
-var format = require('chalk');
+var format = require('turbocolor');
 var symbols = {
     ok: '\u2713',
     err: '\u2717'
@@ -90,4 +90,3 @@ function normalize(data, durationLinePos) {
 String.prototype.repeat = function(n) {
     return new Array(n + 1).join(this);
 }
-

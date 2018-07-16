@@ -4,7 +4,7 @@
   "description": "Formatted TAP output like Mocha's spec reporter",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'Tests are out of date. Not running until fixed.'"
+    "test": "tape unit/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,14 +23,14 @@
     "url": "https://github.com/scottcorgan/tap-spec/issues"
   },
   "dependencies": {
-    "chalk": "^1.0.0",
     "duplexer": "^0.1.1",
     "figures": "^1.4.0",
     "lodash": "^4.17.10",
     "pretty-ms": "^2.1.0",
     "repeat-string": "^1.5.2",
     "tap-out": "^2.1.0",
-    "through2": "^2.0.0"
+    "through2": "^2.0.0",
+    "turbocolor": "^2.3.0"
   },
   "bin": {
     "tspec": "bin/cmd.js",

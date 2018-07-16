@@ -1,6 +1,6 @@
 var ts = require('../..');
 var test = require('tapes');
-var format = require('chalk');
+var format = require('turbocolor');
 var symbols = {
     ok: '\u2713',
     err: '\u2717'
