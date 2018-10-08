@@ -23,7 +23,7 @@
     "url": "https://github.com/scottcorgan/tap-spec/issues"
   },
   "dependencies": {
-    "chalk": "^1.0.0",
+    "colorette": "^1.0.5",
     "duplexer": "^0.1.1",
     "figures": "^1.4.0",
     "lodash": "^4.17.10",

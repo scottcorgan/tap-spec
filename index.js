@@ -3,7 +3,7 @@ var fs = require('fs');
 var tapOut = require('tap-out');
 var through = require('through2');
 var duplexer = require('duplexer');
-var format = require('chalk');
+var fmt = require('colorette');
 var prettyMs = require('pretty-ms');
 var _ = require('lodash');
 var repeat = require('repeat-string');
@@ -26,7 +26,7 @@ module.exports = function (spec) {
 
   parser.on('test', function (test) {
 
-    output.push('\n' + pad(format.underline(test.name)) + '\n\n');
+    output.push('\n' + pad(fmt.underline(test.name)) + '\n\n');
   });
 
   // Passing assertions
@@ -34,13 +34,13 @@ module.exports = function (spec) {
 
     if (/# SKIP/.test(assertion.name)) {
       var name = assertion.name.replace(' # SKIP', '')
-      name = format.cyan('- ' + name);
+      name = fmt.cyan('- ' + name);
 
       output.push(pad('  ' + name + '\n'));
     }
     else {
-      var glyph = format.green(symbols.tick);
-      var name = format.dim(assertion.name);
+      var glyph = fmt.green(symbols.tick);
+      var name = fmt.dim(assertion.name);
 
       output.push(pad('  ' + glyph + ' ' + name + '\n'));
     }
@@ -52,14 +52,14 @@ module.exports = function (spec) {
 
     var glyph = symbols.cross;
     var title =  glyph + ' ' + assertion.name;
-    var raw = format.cyan(prettifyRawError(assertion.error.raw));
+    var raw = fmt.cyan(prettifyRawError(assertion.error.raw));
     var divider = _.fill(
       new Array((title).length + 1),
       '-'
     ).join('');
 
-    output.push('\n' + pad('  ' + format.red(title) + '\n'));
-    output.push(pad('  ' + format.red(divider) + '\n'));
+    output.push('\n' + pad('  ' + fmt.red(title) + '\n'));
+    output.push(pad('  ' + fmt.red(divider) + '\n'));
     output.push(raw);
 
     stream.failed = true;
@@ -67,7 +67,7 @@ module.exports = function (spec) {
 
   parser.on('comment', function (comment) {
 
-    output.push(pad('  ' + format.yellow(comment.raw)) + '\n');
+    output.push(pad('  ' + fmt.yellow(comment.raw)) + '\n');
   });
 
   // All done
@@ -113,7 +113,7 @@ module.exports = function (spec) {
     var past = (failCount === 1) ? 'was' : 'were';
     var plural = (failCount === 1) ? 'failure' : 'failures';
 
-    var out = '\n' + pad(format.red.bold('Failed Tests:') + ' There ' + past + ' ' + format.red.bold(failCount) + ' ' + plural + '\n');
+    var out = '\n' + pad(fmt.red(fmt.bold('Failed Tests:')) + ' There ' + past + ' ' + fmt.red(fmt.bold(failCount)) + ' ' + plural + '\n');
     out += formatFailedAssertions(results);
 
     return out;
@@ -123,13 +123,13 @@ module.exports = function (spec) {
 
     if (results.tests.length === 0 &&
         results.asserts.length === 0) {
-      return pad(format.red(symbols.cross + ' No tests found'));
+      return pad(fmt.red(symbols.cross + ' No tests found'));
     }
 
     return _.filter([
       pad('total:     ' + results.asserts.length),
-      pad(format.green('passing:   ' + results.pass.length)),
-      results.fail.length > 0 ? pad(format.red('failing:   ' + results.fail.length)) : undefined,
+      pad(fmt.green('passing:   ' + results.pass.length)),
+      results.fail.length > 0 ? pad(fmt.red('failing:   ' + results.fail.length)) : undefined,
       pad('duration:  ' + prettyMs(new Date().getTime() - startTime))
     ], _.identity).join('\n');
   }
@@ -151,7 +151,7 @@ module.exports = function (spec) {
       // Write failed assertion
       _.each(assertions, function (assertion) {
 
-        out += pad('    ' + format.red(symbols.cross) + ' ' + format.red(assertion.name)) + '\n';
+        out += pad('    ' + fmt.red(symbols.cross) + ' ' + fmt.red(assertion.name)) + '\n';
       });
 
       out += '\n';
