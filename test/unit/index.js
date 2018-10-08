@@ -1,6 +1,6 @@
 var ts = require('../..');
 var test = require('tapes');
-var format = require('chalk');
+var fmt = require('colorette');
 var symbols = {
     ok: '\u2713',
     err: '\u2717'
@@ -38,7 +38,7 @@ test('unit test', function(t) {
     t.test('Assert ok', function(t) {
         t.plan(1);
         var assert = 'ok 1 this is an ok assertion\n';
-        var expected = '    ' + format.green(symbols.ok) + ' ' + format.gray('this is an ok assertion') + '\n';
+        var expected = '    ' + fmt.green(symbols.ok) + ' ' + fmt.gray('this is an ok assertion') + '\n';
 
         rs.on('end', function() {
             t.equal(actual, expected, 'Should format ok assertion correctly.');
@@ -52,7 +52,7 @@ test('unit test', function(t) {
     t.test('Assert not ok', function(t) {
         t.plan(1);
         var assert = 'not ok 1 this is a not-ok assertion\n';
-        var expected = '    ' + format.red(symbols.err) + ' ' + format.gray('this is a not-ok assertion') + '\n';
+        var expected = '    ' + fmt.red(symbols.err) + ' ' + fmt.gray('this is a not-ok assertion') + '\n';
 
         rs.on('end', function() {
             t.equal(actual, expected, 'Should format not-ok assertion correctly.');
@@ -66,7 +66,7 @@ test('unit test', function(t) {
     t.test('Extra', function(t) {
         t.plan(1);
         var extra = 'something extra that does not match any other regex\n';
-        var expected = '   ' + format.yellow('something extra that does not match any other regex') + '\n';
+        var expected = '   ' + fmt.yellow('something extra that does not match any other regex') + '\n';
 
         rs.on('end', function() {
             t.equal(actual, expected, 'Should format extra correctly.');
