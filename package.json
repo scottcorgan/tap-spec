@@ -37,6 +37,6 @@
     "tap-spec": "bin/cmd.js"
   },
   "devDependencies": {
-    "tapes": "^2.0.0"
+    "tapes": "^4.1.0"
   }
 }
